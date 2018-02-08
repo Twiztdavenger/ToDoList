@@ -6,7 +6,6 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Input;
-using ToDoList.Command;
 
 using System.Data.SQLite;
 using System.Windows;
@@ -16,7 +15,11 @@ namespace ToDoList.ViewModel
 {
     public class TaskListViewModel : INotifyPropertyChanged
     {
+        // This is our official task list
+        // This is an Observable Collection so the list will automatically update without us
+        // refreshing the list manually
         private ObservableCollection<TaskViewModel> tasks = new ObservableCollection<TaskViewModel>();
+
         ManageDatabase md = new ManageDatabase();
 
         public ObservableCollection<TaskViewModel> Tasks {
@@ -30,6 +33,12 @@ namespace ToDoList.ViewModel
 
             }
         }
+        public event PropertyChangedEventHandler PropertyChanged;
+
+        private void NotifyPropertyChanged(String name)
+        {
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
+        }
         public int ID { get; set; }
         public string TaskName { get; set; }
         public bool Complete { get; set; }
@@ -37,65 +46,47 @@ namespace ToDoList.ViewModel
         public bool Archive { get; set; }
 
 
-
-
-        // COMMANDS #######
-
-        public ICommand CreateTaskCommand { get { return new CreateTaskCommand(); } }
-
-        public event PropertyChangedEventHandler PropertyChanged;
-
-        private void NotifyPropertyChanged(String name)
+        
+        // Constructor that contains all of our relay commands
+        public TaskListViewModel()
         {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
+            DeleteCommand = new RelayCommand(Delete);
+            EditCommand = new RelayCommand(Edit);
+            CreateCommand = new RelayCommand(Create);
         }
 
-        public RelayCommand DeleteCommand { get; set; }
-        public RelayCommand EditCommand { get; set; }
-        public RelayCommand CreateCommand { get; set; }
 
-
-        //Gather which task was selected
-        public TaskViewModel selectedTask;
-        public TaskViewModel SelectedTask
-        {
-            get
-            {
-                return selectedTask;
-            }
-            set
-            {
-                NotifyPropertyChanged("SelectedTask");
-                selectedTask = value;
-            }
-        }
-
+        // DELETE //
         private void Delete(object task)
         {
             if (task != null)
             {
+                // This grabs the task object from the Observable Collection and delets it
                 this.Tasks.Remove(Tasks.Where(i => i == (TaskViewModel)task).Single());
                 md.removeTaskRecord((TaskViewModel)task);
             }
         }
 
+        // EDIT //
         private void Edit(object task)
         {
             if (task != null)
             {
+                // We pass the task and this TaskViewModel into the dialog and show it
                 var edTask = new TaskDialog((TaskViewModel)task, this);
-
-
 
                 edTask.ShowDialog();
             }
         }
 
+        // CREATE //
         private void Create(object obj)
         {
+
+            // If the object we are passing is of type TaskListViewModel
             if (obj is TaskListViewModel taskList)
             {
-                
+                // We create a temporary task to hold all of our data
                 TaskViewModel tsk = new TaskViewModel()
                 {
                     ID = taskList.ID,
@@ -105,34 +96,35 @@ namespace ToDoList.ViewModel
                     Archive = false
                 };
 
-                if(taskList.Tasks.Any(p => p.ID == taskList.ID))
+                // If tasklist DOES contain the task we are editing
+                if (taskList.Tasks.Any(p => p.ID == taskList.ID))
                 {
-                    //If tasklist DOES contain the task we are editing
+                    // Grab the task from the ObservableCollection Tasks and assign it to tempTask
                     TaskViewModel tempTask = taskList.Tasks.Single(p => p.ID == taskList.ID);
+
+                    // Grab the index of this tempTask in Tasks Collection
                     int index = taskList.Tasks.IndexOf(tempTask);
 
+                    // Update the task at this index and pass it through the database to update
                     taskList.Tasks[index] = tsk;
                     md.addTaskRecord(tsk);
 
                 } else
                 {
+                    // If tasklist does NOT contain the task we are editing
+                    // We udate the tasks collection with the new task we are adding
                     taskList.Tasks.Add(tsk);
-
                     md.addTaskRecord(tsk);
                 }
                 
             }
         }
 
-        public TaskListViewModel()
-        {
-            DeleteCommand = new RelayCommand(Delete);
-            EditCommand = new RelayCommand(Edit);
-            CreateCommand = new RelayCommand(Create);
-        }
-
-
-}
+        // COMMANDS 
+        public RelayCommand DeleteCommand { get; set; }
+        public RelayCommand EditCommand { get; set; }
+        public RelayCommand CreateCommand { get; set; }
+    }
 
 
 }

@@ -50,6 +50,7 @@ namespace ToDoList.Database
         public void addTaskRecord(TaskViewModel task)
         {
             
+            // I could not get this to work parameterized for some reason
             DataTable mTable;
             cmdText = "SELECT * from tasks where ID = " + task.ID;
 

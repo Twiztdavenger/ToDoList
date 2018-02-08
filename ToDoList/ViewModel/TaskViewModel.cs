@@ -4,13 +4,22 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Input;
-using ToDoList.Command;
 
 namespace ToDoList.ViewModel
 {
     public class TaskViewModel : TaskListViewModel
     {
-        public ICommand EditTaskCommand { get { return new EditTaskCommand(); } }
+
+        /// <summary>
+        /// This is the ViewModel for each individual task, it implements the 
+        /// TaskListVViewModel
+        /// 
+        /// Each task has ID, Name, Complete, Priority, and Archive attributes
+        /// 
+        /// This class also takes the iconOpacity of the "warning" icon 
+        /// and adjusts it based on the priority level
+        /// 
+        /// </summary>
 
         public int ID { get; set; }
         public String Name { get; set; }

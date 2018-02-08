@@ -16,10 +16,15 @@ using ToDoList.ViewModel;
 namespace ToDoList
 {
     /// <summary>
-    /// Interaction logic for TaskDialogxaml.xaml
+    /// This is the window to edit or add tasks to our list
+    /// 
+    /// I was able to put the add/edit logic into one window
+    /// This makes everything much less redundant 
+    /// 
     /// </summary>
     public partial class TaskDialog : Window
     {
+        // These are values we need to store for later
         int ID;
         string name;
         int priority;
@@ -28,7 +33,8 @@ namespace ToDoList
         TaskListViewModel tasks;
 
         string TaskName = "";
-
+        
+        // If we are only adding a task, all we need is the list to pass through
         public TaskDialog(TaskListViewModel tasks)
         {
 
@@ -41,20 +47,23 @@ namespace ToDoList
             this.DataContext = tasks;
         }
 
+        // If we are editing a task, we need to pass through the task itself and the list
         public TaskDialog(TaskViewModel tsk, TaskListViewModel tasks)
         {
             InitializeComponent();
 
             SubmitButton.Content = "Apply";
 
+            // This populates our ListView with the task data we are editing
             tasks.ID = tsk.ID;
             tasks.TaskName = tsk.Name;
             tasks.Priority = tsk.Priority;
             tasks.Complete = tsk.Complete;
             this.tasks = tasks;
 
-            RadioButton rb = new RadioButton();
 
+            // This checks the appropriate radio button according to the priority of the
+            // task we are editing
              switch(tasks.Priority)
             {
                 case 1:
@@ -68,11 +77,13 @@ namespace ToDoList
                     break;
             }
 
+            // Changes the checkbox to match the task complete progress we are editing
             completeCB.IsChecked = tasks.Complete;
 
             this.DataContext = tasks; 
         }
 
+        // Changes the priority based on what radio button we choose
         private void radioButtons_CheckedChanged(object sender, RoutedEventArgs e)
         {
             RadioButton radioButton = sender as RadioButton;
@@ -94,6 +105,7 @@ namespace ToDoList
             tasks.Priority = priority;
         }
 
+        // We hit the cancel button, nuff said
         private void cancel(object sender, RoutedEventArgs e)
         {
             this.Close();

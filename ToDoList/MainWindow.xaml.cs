@@ -23,13 +23,19 @@ using System.Globalization;
 namespace ToDoList
 {
     /// <summary>
-    /// Interaction logic for MainWindow.xaml
+    /// 
+    /// This is the main window that will show the list of task items in 
+    /// the database.
+    /// 
     /// </summary>
     public partial class MainWindow : Window
     {
         ManageDatabase mD = new ManageDatabase();
 
         TaskListViewModel tasks = new TaskListViewModel();
+
+        // Contstructor for the main window, decides the data context and syncs
+        // data from the database to the task listview
 
         public MainWindow()
         {
@@ -40,6 +46,8 @@ namespace ToDoList
             this.DataContext = tasks;
         }
 
+        // This method is called when 'New' is pressed on the menu
+        // It shows the task dialog to add a task
         private void newTask(object sender, RoutedEventArgs e)
         {
             var addTask = new TaskDialog(tasks);

@@ -84,9 +84,6 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Compile Include="Command\EditTaskCommand.cs" />
-    <Compile Include="Command\CreateTaskCommand.cs" />
-    <Compile Include="Command\DeleteTaskCommand.cs" />
     <Compile Include="Database\Connection.cs" />
     <Compile Include="Database\ManageDatabase.cs" />
     <Compile Include="TaskDialog.xaml.cs">

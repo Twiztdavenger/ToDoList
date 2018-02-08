@@ -17,17 +17,11 @@
         FontFamily="{DynamicResource MaterialDesignFont}"
         >
     <Grid>
-        
-        
-
         <!-- Main Grid -->
         <Grid.RowDefinitions>
-
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="450"/>
-
             <RowDefinition Height="*"/>
-
         </Grid.RowDefinitions>
 
 
@@ -42,25 +36,18 @@
             </ToolBarTray>
         </DockPanel>
 
-
-
-
-
         <!-- Task Template -->
 
         <ListBox Name="itemsCtrl" ItemsSource="{Binding Tasks}" 
                  SelectedItem="{Binding Path=SelectedTask, Mode=TwoWay}" Grid.Row="1"
                  SelectionMode="Single">
 
-
             <ListBox.ItemTemplate>
-                
-                
+
                 <DataTemplate>
-                    
-                    
+
                     <Grid>
-                        
+
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="Auto"/>
                             <ColumnDefinition Width="*" />
@@ -70,32 +57,33 @@
 
                         <TextBlock Text="{Binding Name}" />
 
+                        <!-- List Item that displays the task information -->
                         <StackPanel Orientation="Horizontal" Grid.Column="3" HorizontalAlignment="Right">
+
+                            <!-- Priority Level -->
                             <iconPacks:PackIconModern Kind="Warning" Opacity="{Binding IconOpacity}" Margin="0,0,9,0" />
 
+                            <!-- Complete? -->
                             <CheckBox IsChecked="{Binding Complete}" Margin="0,0,9,0" />
 
+                            <!-- Edit Button -->
                             <Button Command="{Binding ElementName=itemsCtrl, 
                                 Path=DataContext.EditCommand}" 
                                     CommandParameter="{Binding}">
                                 <iconPacks:PackIconMaterial Kind="Pencil"/>
                             </Button>
 
+                            <!-- Delete button -->
                             <Button Command="{Binding ElementName=itemsCtrl, 
                                 Path=DataContext.DeleteCommand}" 
                                     CommandParameter="{Binding}">
                                 <iconPacks:PackIconMaterial Kind="Delete"/>
                             </Button>
 
-
                         </StackPanel>
-
-
                     </Grid>
                 </DataTemplate>
             </ListBox.ItemTemplate>
         </ListBox>
-
-       
     </Grid>
 </Window>

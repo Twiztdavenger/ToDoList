@@ -14,6 +14,12 @@ using System.Windows.Navigation;
 using System.Windows.Shapes;
 using ToDoList.ViewModel;
 
+using System.Data.Sql;
+using ToDoList.Database;
+using System.IO;
+using System.Reflection;
+using System.Globalization;
+
 namespace ToDoList
 {
     /// <summary>
@@ -21,18 +27,27 @@ namespace ToDoList
     /// </summary>
     public partial class MainWindow : Window
     {
+        ManageDatabase mD = new ManageDatabase();
+
+        TaskListViewModel tasks = new TaskListViewModel();
+
         public MainWindow()
         {
             InitializeComponent();
 
-            var tasks = new TaskListViewModel();
-
-            
-
-            tasks.Tasks.Add(new TaskViewModel() { Name = "Task 1", Complete = false });
-            tasks.Tasks.Add(new TaskViewModel() { Name = "Task 2", Complete = true });
+            tasks = mD.taskDataTransfer(tasks);
 
             this.DataContext = tasks;
         }
+
+        private void newTask(object sender, RoutedEventArgs e)
+        {
+            var addTask = new TaskDialog(tasks);
+
+            addTask.ShowDialog();
+
+        }
+
+        
     }
 }

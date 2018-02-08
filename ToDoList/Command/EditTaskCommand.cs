@@ -11,7 +11,7 @@ using ToDoList.Database;
 
 namespace ToDoList.Command
 {
-    public class CreateTaskCommand : ICommand 
+    public class EditTaskCommand : ICommand 
     {
         ManageDatabase md = new ManageDatabase();
 
@@ -25,14 +25,9 @@ namespace ToDoList.Command
 
         public void Execute(object parameter)
         {
-            if (parameter is TaskListViewModel taskList)
+            if (parameter is TaskViewModel task)
             {
-                TaskViewModel tsk = new TaskViewModel() { ID = taskList.ID, Name = taskList.TaskName,
-                    Complete = taskList.Complete, Priority = taskList.Priority,
-                    Archive = false};
-                taskList.Tasks.Add(tsk);
-                
-                md.addTaskRecord(tsk);
+                var addTask = new TaskDialog(task);
             }
         }
     }

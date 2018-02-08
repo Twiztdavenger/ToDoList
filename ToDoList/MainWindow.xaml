@@ -3,67 +3,99 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:iconPacks="http://metro.mahapps.com/winfx/xaml/iconpacks"
         xmlns:local="clr-namespace:ToDoList"
         mc:Ignorable="d"
-        Title="Task It" Height="500" Width="600">
+        Title="Task It" Height="650" Width="600"
+        xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+        TextElement.Foreground="{DynamicResource MaterialDesignBody}"
+        TextElement.FontWeight="Regular"
+        TextElement.FontSize="18"
+        TextOptions.TextFormattingMode="Ideal" 
+        TextOptions.TextRenderingMode="Auto"        
+        Background="{DynamicResource MaterialDesignPaper}"
+        FontFamily="{DynamicResource MaterialDesignFont}"
+        >
     <Grid>
+        
+        
 
         <!-- Main Grid -->
         <Grid.RowDefinitions>
+
             <RowDefinition Height="Auto"/>
+            <RowDefinition Height="450"/>
+
             <RowDefinition Height="*"/>
-            <RowDefinition Height="25"/>
+
         </Grid.RowDefinitions>
 
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="300"/>
-            <ColumnDefinition Width="*"/>
-        </Grid.ColumnDefinitions>
+
 
         <!-- Titles -->
         <TextBlock Text="Task It - Task Manager" Grid.Column="0" HorizontalAlignment="Center"/>
+        <DockPanel>
+            <ToolBarTray DockPanel.Dock="Top">
+                <ToolBar>
+                    <Button Content="New" Click="newTask" />
+                </ToolBar>
+            </ToolBarTray>
+        </DockPanel>
 
-        <TextBlock Text="Task Editor" Grid.Column="1" HorizontalAlignment="Center"/>
 
 
 
 
         <!-- Task Template -->
-        <ListBox Name="itemsCtrl" ItemsSource="{Binding Tasks}" Grid.Row="1">
-            <ListBox.Resources>
-                <!-- Set SelectedItem Background here -->
-                <SolidColorBrush x:Key="{x:Static SystemColors.HighlightBrushKey}" Color="Yellow"/>
-            </ListBox.Resources>
+
+        <ListBox Name="itemsCtrl" ItemsSource="{Binding Tasks}" 
+                 SelectedItem="{Binding Path=SelectedTask, Mode=TwoWay}" Grid.Row="1"
+                 SelectionMode="Single">
+
 
             <ListBox.ItemTemplate>
+                
+                
                 <DataTemplate>
+                    
+                    
                     <Grid>
+                        
                         <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="10"/>
                             <ColumnDefinition Width="Auto"/>
                         </Grid.ColumnDefinitions>
 
-                        <TextBlock Text="{Binding Name}"/>
-                        <CheckBox IsChecked="{Binding Complete}" Grid.Column="1"/>
+                        <TextBlock Text="{Binding Name}" />
+
+                        <StackPanel Orientation="Horizontal" Grid.Column="3" HorizontalAlignment="Right">
+                            <iconPacks:PackIconModern Kind="Warning" Opacity="{Binding IconOpacity}" Margin="0,0,9,0" />
+
+                            <CheckBox IsChecked="{Binding Complete}" Margin="0,0,9,0" />
+
+                            <Button Command="{Binding ElementName=itemsCtrl, 
+                                Path=DataContext.EditCommand}" 
+                                    CommandParameter="{Binding}">
+                                <iconPacks:PackIconMaterial Kind="Pencil"/>
+                            </Button>
+
+                            <Button Command="{Binding ElementName=itemsCtrl, 
+                                Path=DataContext.DeleteCommand}" 
+                                    CommandParameter="{Binding}">
+                                <iconPacks:PackIconMaterial Kind="Delete"/>
+                            </Button>
+
+
+                        </StackPanel>
+
+
                     </Grid>
                 </DataTemplate>
             </ListBox.ItemTemplate>
         </ListBox>
 
-        <!-- Task Editor -->
-
-        <Grid Grid.Row="1" Grid.Column="1" Margin="0,0,0.333,-0.333" Grid.RowSpan="2">
-            <Grid.RowDefinitions>
-                <RowDefinition Height="30"/>
-                <RowDefinition Height="20"/>
-                <RowDefinition Height="70"/>
-            </Grid.RowDefinitions>
-
-            
-
-            <TextBlock Text="Name:" VerticalAlignment="Center"/>
-            <TextBox Text="{Binding TaskName, Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}" Grid.Row="1"/>
-            <Button Content="Add Task" Command="{Binding CreateTaskCommand}" CommandParameter = "{Binding}" Grid.Row="2"/>
-        </Grid>
+       
     </Grid>
 </Window>

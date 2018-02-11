@@ -37,6 +37,7 @@ namespace ToDoList
         // If we are only adding a task, all we need is the list to pass through
         public TaskDialog(TaskListViewModel tasks)
         {
+            tasks.resetViewModel();
 
             this.tasks = tasks;
             
@@ -107,6 +108,11 @@ namespace ToDoList
 
         // We hit the cancel button, nuff said
         private void cancel(object sender, RoutedEventArgs e)
+        {
+            this.Close();
+        }
+
+        private void SubmitButton_Click(object sender, RoutedEventArgs e)
         {
             this.Close();
         }

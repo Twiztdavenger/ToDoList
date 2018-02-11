@@ -79,7 +79,7 @@
             </CheckBox.RenderTransform>
         </CheckBox>
 
-        <Button Name="SubmitButton"  Command="{Binding CreateCommand}" CommandParameter = "{Binding}" Grid.Row="3" Width="100" Margin="0" HorizontalAlignment="Right" VerticalAlignment="Bottom"/>
+        <Button Name="SubmitButton"  Command="{Binding CreateCommand}" CommandParameter = "{Binding}" Grid.Row="3" Width="100" Margin="0" HorizontalAlignment="Right" VerticalAlignment="Bottom" Click="SubmitButton_Click"/>
         <Button Content="Cancel" Grid.Row="3" Width="100" Margin="0" HorizontalAlignment="Left" VerticalAlignment="Bottom" Click="cancel"/>
 
     </Grid>

@@ -50,9 +50,13 @@ namespace ToDoList
         // It shows the task dialog to add a task
         private void newTask(object sender, RoutedEventArgs e)
         {
+            // BUG: When previously editing a task, adding a new task fills the text
+            //      
             var addTask = new TaskDialog(tasks);
 
             addTask.ShowDialog();
+
+            
 
         }
 

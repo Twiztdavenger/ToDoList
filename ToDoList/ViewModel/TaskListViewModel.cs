@@ -86,19 +86,23 @@ namespace ToDoList.ViewModel
             // If the object we are passing is of type TaskListViewModel
             if (obj is TaskListViewModel taskList)
             {
-                // We create a temporary task to hold all of our data
-                TaskViewModel tsk = new TaskViewModel()
-                {
-                    ID = taskList.ID,
-                    Name = taskList.TaskName,
-                    Complete = taskList.Complete,
-                    Priority = taskList.Priority,
-                    Archive = false
-                };
+                
 
                 // If tasklist DOES contain the task we are editing
+
+                // BUG - IF ITS A NEW TASK THE ID IS NOT UNIQUE AND EDITS DIFFERENT TASK
+
                 if (taskList.Tasks.Any(p => p.ID == taskList.ID))
                 {
+                    // We create a temporary task to hold all of our data
+                    TaskViewModel tsk = new TaskViewModel()
+                    {
+                        ID = taskList.ID,
+                        Name = taskList.TaskName,
+                        Complete = taskList.Complete,
+                        Priority = taskList.Priority,
+                        Archive = false
+                    };
                     // Grab the task from the ObservableCollection Tasks and assign it to tempTask
                     TaskViewModel tempTask = taskList.Tasks.Single(p => p.ID == taskList.ID);
 
@@ -109,12 +113,27 @@ namespace ToDoList.ViewModel
                     taskList.Tasks[index] = tsk;
                     md.addTaskRecord(tsk);
 
+                    //Resets these values for the next tasklist call
+                    resetViewModel();
+
                 } else
                 {
+                    // We create a temporary task to hold all of our data
+                    TaskViewModel tsk = new TaskViewModel()
+                    {
+                        Name = taskList.TaskName,
+                        Complete = taskList.Complete,
+                        Priority = taskList.Priority,
+                        Archive = false
+                    };
                     // If tasklist does NOT contain the task we are editing
                     // We udate the tasks collection with the new task we are adding
                     taskList.Tasks.Add(tsk);
                     md.addTaskRecord(tsk);
+
+                    // Resets these values for the next tasklist call
+                    // 
+                    resetViewModel();
                 }
                 
             }
@@ -124,6 +143,17 @@ namespace ToDoList.ViewModel
         public RelayCommand DeleteCommand { get; set; }
         public RelayCommand EditCommand { get; set; }
         public RelayCommand CreateCommand { get; set; }
+
+        //RESET METHOD
+
+        public void resetViewModel()
+        {
+            //Resets values to avoid weird bug
+            this.ID = -99;
+            this.TaskName = "";
+            this.Complete = false;
+            Archive = false;
+        }
     }
 
 
